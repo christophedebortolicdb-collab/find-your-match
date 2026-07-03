@@ -9,24 +9,24 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-qge3qMmY3J
 async function verifierCode(code) {
   const messageEl = document.getElementById('message');
 
-  try {
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', // no-cors requis pour Google Apps Script
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code })
-    });
+try {
+    const response = await fetch(GOOGLE_SCRIPT_URL + "?code=" + code);
+    const data = await response.json();
 
-    // Avec no-cors on ne peut pas lire la réponse,
-    // on traite le succès comme "valide"
-    messageEl.textContent = '🎉 Défi validé !';
-    showConfetti();
+    if (data.status === "OK") {
+        messageEl.textContent = "🎉 Défi validé !";
+        showConfetti();
+    } else if (data.status === "USED") {
+        messageEl.textContent = "⚠️ Code déjà utilisé";
+    } else {
+        messageEl.textContent = "❌ Code invalide";
+    }
 
-  } catch (err) {
-    messageEl.textContent = '❌ Erreur de connexion';
+} catch (err) {
+    messageEl.textContent = "❌ Erreur de connexion";
     console.error(err);
-  }
 }
+
 
 // ============================================================
 //  Confettis
