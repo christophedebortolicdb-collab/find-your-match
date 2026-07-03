@@ -16,7 +16,7 @@ try {
     if (data.status === "OK") {
         messageEl.textContent = "🎉 Défi validé !";
         showConfetti();
-    } else if (data.status === "USED") {
+    } else if (data.status === "ALREADY_USED") {
         messageEl.textContent = "⚠️ Code déjà utilisé";
     } else {
         messageEl.textContent = "❌ Code invalide";
