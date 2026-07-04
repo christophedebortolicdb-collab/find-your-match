@@ -18,13 +18,21 @@ async function verifierCode(code) {
 
     if (data.status === "OK") {
       // ✅ Code valide
-      messageElement.innerHTML = "✅ Code validé !";
+      messageElement.innerHTML = "✅ Défi validé !";
 
       lancerConfetti();
 
     } else {
-      // ❌ Code invalide
-      messageElement.innerHTML = "❌ Code invalide";
+          if (data.status === "USED") {
+              // ✅ Code valide
+              messageElement.innerHTML = "✅ Défi déjà validé !";
+        
+              lancerConfetti();
+        
+            } else {
+              // ❌ Code invalide
+              messageElement.innerHTML = "❌ Défi invalide";
+            }
     }
 
   } catch (error) {
