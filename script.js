@@ -15,7 +15,7 @@ async function chargerClassement() {
   try {
     const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list`);
     const data = await response.json();
-
+    console.log(data);
     afficherClassement(data);
 
   } catch (error) {
@@ -78,6 +78,25 @@ function lancerConfetti() {
       requestAnimationFrame(frame);
     }
   })();
+}
+function afficherClassement(data) {
+  const container = document.getElementById("classement");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  data.forEach((item, index) => {
+    const ligne = document.createElement("div");
+
+    ligne.innerHTML = `
+      <strong>${index + 1}</strong> - 
+      ${item.colE} ${item.colF} ${item.colG} - 
+      ${new Date(item.date).toLocaleString()}
+    `;
+
+    container.appendChild(ligne);
+  });
 }
 
 
