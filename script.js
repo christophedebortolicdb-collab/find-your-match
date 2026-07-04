@@ -11,6 +11,19 @@ if (!code) {
   verifierCode(code);
 }
 
+async function chargerClassement() {
+  try {
+    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list`);
+    const data = await response.json();
+
+    afficherClassement(data);
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 async function verifierCode(code) {
   try {
     const response = await fetch(`${GOOGLE_SCRIPT_URL}?code=${code}`);
@@ -19,19 +32,21 @@ async function verifierCode(code) {
     if (data.status === "OK") {
       // ✅ Code valide
       messageElement.innerHTML = "✅ Défi validé !";
-
+      chargerClassement();
       lancerConfetti();
 
     } else {
           if (data.status === "USED") {
               // ✅ Code valide
               messageElement.innerHTML = "✅ Défi déjà validé !";
-        
+              chargerClassement();
               lancerConfetti();
+              
         
             } else {
               // ❌ Code invalide
               messageElement.innerHTML = "❌ Défi invalide";
+              chargerClassement();
             }
     }
 
@@ -65,15 +80,4 @@ function lancerConfetti() {
   })();
 }
 
-async function chargerClassement() {
-  try {
-    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list`);
-    const data = await response.json();
-
-    afficherClassement(data);
-
-  } catch (error) {
-    console.error(error);
-  }
-}
 
