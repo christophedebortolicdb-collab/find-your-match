@@ -80,22 +80,22 @@ function lancerConfetti() {
   })();
 }
 function afficherClassement(data) {
-  const container = document.getElementById("classement");
+  const tbody = document.querySelector("#classement tbody");
 
-  if (!container) return;
+  if (!tbody) return;
 
-  container.innerHTML = "";
+  tbody.innerHTML = "";
 
   data.forEach((item, index) => {
-    const ligne = document.createElement("div");
+    const row = document.createElement("tr");
 
-    ligne.innerHTML = `
-      <strong>${index + 1}</strong> - 
-      ${item.colE} ${item.colF} ${item.colG} - 
-      ${new Date(item.date).toLocaleString()}
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${item.colE} ${item.colF} ${item.colG}</td>
+      <td>${new Date(item.date).toLocaleString()}</td>
     `;
 
-    container.appendChild(ligne);
+    tbody.appendChild(row);
   });
 }
 
