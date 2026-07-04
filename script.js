@@ -1,61 +1,34 @@
 const codes = {
-    "ABC123": false,
-    "TEST01": false,
-    "MARIAGE2026": false
+  "MARIAGE2026": false,
+  "ABC123": false,
+  "TEST01": false
 };
-
-const emoji = {
-    "noCode": "⚠️",
-    "invalid": "❌",
-    "used": "⚠️",
-    "valid": "🎉"
-};
-
-const message = {
-    "noCode": "Aucun code fourni",
-    "invalid": "Code invalide",
-    "used": "Code déjà utilisé",
-    "valid": "Code valide !"
-};
-
-function lancerConfettis() {
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
-    });
-    setTimeout(() => {
-        confetti({
-            particleCount: 100,
-            spread: 100,
-            origin: { y: 0.6 }
-        });
-    }, 300);
-}
 
 function verifierCode(code) {
-    if (!code) {
-        document.getElementById("message").textContent = emoji.noCode + " " + message.noCode;
-        return;
-    }
+  const message = document.getElementById("message");
 
-    code = code.trim().toUpperCase();
+  if (!codes.hasOwnProperty(code)) {
+    message.textContent = "❌ Code invalide";
+    return;
+  }
 
-    if (!(code in codes)) {
-        document.getElementById("message").textContent = emoji.invalid + " " + message.invalid;
-        return;
-    }
+  if (codes[code]) {
+    message.textContent = "⚠️ Code déjà utilisé";
+    return;
+  }
 
-    if (codes[code] === true) {
-        document.getElementById("message").textContent = emoji.used + " " + message.used;
-        return;
-    }
+  // Marquer utilisé
+  codes[code] = true;
 
-    codes[code] = true;
-    document.getElementById("message").textContent = emoji.valid + " " + message.valid;
-    lancerConfettis();
+  message.textContent = "🎉 Code valide !";
+
+  lancerConfettis();
 }
 
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
-verifierCode(code);
+function lancerConfettis() {
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
