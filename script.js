@@ -1,40 +1,61 @@
 const codes = {
-  "ABC123": false,
-  "TEST01": false,
-  "MARIAGE2026": false
+    "ABC123": false,
+    "TEST01": false,
+    "MARIAGE2026": false
 };
 
-function getCodeFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("code");
+const emoji = {
+    "noCode": "⚠️",
+    "invalid": "❌",
+    "used": "⚠️",
+    "valid": "🎉"
+};
+
+const message = {
+    "noCode": "Aucun code fourni",
+    "invalid": "Code invalide",
+    "used": "Code déjà utilisé",
+    "valid": "Code valide !"
+};
+
+function lancerConfettis() {
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+    }, 300);
 }
 
 function verifierCode(code) {
-  if (!codes.hasOwnProperty(code)) {
-    return { status: "INVALID" };
-  }
+    if (!code) {
+        document.getElementById("message").textContent = emoji.noCode + " " + message.noCode;
+        return;
+    }
 
-  if (codes[code] === true) {
-    return { status: "USED" };
-  }
+    code = code.trim().toUpperCase();
 
-  codes[code] = true;
-  return { status: "OK" };
+    if (!(code in codes)) {
+        document.getElementById("message").textContent = emoji.invalid + " " + message.invalid;
+        return;
+    }
+
+    if (codes[code] === true) {
+        document.getElementById("message").textContent = emoji.used + " " + message.used;
+        return;
+    }
+
+    codes[code] = true;
+    document.getElementById("message").textContent = emoji.valid + " " + message.valid;
+    lancerConfettis();
 }
 
-// ✅ AU CHARGEMENT DE LA PAGE
-window.onload = () => {
-  const code = getCodeFromURL();
-
-  if (!code) return;
-
-  const result = verifierCode(code);
-
-  if (result.status === "OK") {
-    lancerConfettis(); // ta fonction existante
-  } else if (result.status === "USED") {
-    afficherErreur("Code déjà utilisé");
-  } else {
-    afficherErreur("Code invalide");
-  }
-};
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+verifierCode(code);
