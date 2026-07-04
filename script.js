@@ -3,7 +3,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIAzgMCVMfEb
 const urlParams = new URLSearchParams(window.location.search);
 const code = urlParams.get("code");
 
-const messageElement = document.querySelector(".message");
+const messageElement = document.getElementById("message");
 
 if (!code) {
   messageElement.innerHTML = "⚠️ Aucun code fourni";
