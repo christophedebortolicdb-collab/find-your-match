@@ -93,7 +93,6 @@ body {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(255,255,255,0.6);
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   transform: translateY(-10px);
 }
