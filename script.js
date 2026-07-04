@@ -64,3 +64,16 @@ function lancerConfetti() {
     }
   })();
 }
+
+async function chargerClassement() {
+  try {
+    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list`);
+    const data = await response.json();
+
+    afficherClassement(data);
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
