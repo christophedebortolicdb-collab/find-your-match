@@ -1,63 +1,40 @@
-// ============================================================
-//  ⚠️  REMPLACER PAR TON URL GOOGLE APPS SCRIPT
-// ============================================================
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIAzgMCVMfEbxbMZjaCKQ-S8BknqdLggEP2KI-AyrO_wAO3pnd-P0Cv_2iuV19nv1c/exec';
+const codes = {
+  "ABC123": false,
+  "TEST01": false,
+  "MARIAGE2026": false
+};
 
-// ============================================================
-//  Vérifie le code auprès de Google Sheets
-// ============================================================
-async function verifierCode(code) {
-  const messageEl = document.getElementById('message');
-
-try {
-    const response = await fetch(GOOGLE_SCRIPT_URL + "?code=" + code);
-    const data = await response.json();
-
-    if (data.status === "OK") {
-        messageEl.textContent = "🎉 Défi validé !";
-        showConfetti();
-    } else if (data.status === "ALREADY_USED") {
-        messageEl.textContent = "⚠️ Code déjà utilisé";
-    } else {
-        messageEl.textContent = "❌ Code invalide";
-    }
-
-} catch (err) {
-    messageEl.textContent = "❌ Erreur de connexion";
-    console.error(err);
+function getCodeFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("code");
 }
 
+function verifierCode(code) {
+  if (!codes.hasOwnProperty(code)) {
+    return { status: "INVALID" };
+  }
 
-// ============================================================
-//  Confettis
-// ============================================================
-function showConfetti() {
-  const colors = ['#f2a900', '#c8102e', '#0033a0', '#ffffff'];
+  if (codes[code] === true) {
+    return { status: "USED" };
+  }
 
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: colors
-  });
-
-  setTimeout(() => {
-    confetti({
-      particleCount: 50,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      colors: colors
-    });
-  }, 250);
-
-  setTimeout(() => {
-    confetti({
-      particleCount: 50,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      colors: colors
-    });
-  }, 400);
+  codes[code] = true;
+  return { status: "OK" };
 }
+
+// ✅ AU CHARGEMENT DE LA PAGE
+window.onload = () => {
+  const code = getCodeFromURL();
+
+  if (!code) return;
+
+  const result = verifierCode(code);
+
+  if (result.status === "OK") {
+    lancerConfettis(); // ta fonction existante
+  } else if (result.status === "USED") {
+    afficherErreur("Code déjà utilisé");
+  } else {
+    afficherErreur("Code invalide");
+  }
+};
