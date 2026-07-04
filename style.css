@@ -5,7 +5,7 @@ body {
   min-height: 100vh;
 }
 
-/*  CENTRAGE GLOBAL */
+/*  CENTRAGE GLOBAL  */
 .wrapper {
   display: flex;
   flex-direction: column;
