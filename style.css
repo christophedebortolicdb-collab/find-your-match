@@ -72,7 +72,7 @@ body {
   background: #f1f1ff;
 }
 
-/* 🥇🥈🥉 top 3 */
+/* top 3 */
 #classement tr:nth-child(1) td:first-child {
   font-weight: bold;
   color: gold;
