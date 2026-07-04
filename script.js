@@ -1,60 +1,58 @@
-const codes = {
-"X7K2AQS23": false,
-"P4Q92SDR2": false,
-"N2F635CSN": false,
-"M4T8PLX92": false,
-"Q9ZL2KX71": false,
-"H7R5VNQ84": false,
-"Y2B8CJX66": false,
-"K3L9WQP20": false,
-"D8X4ZMN55": false,
-"P6R2VTX91": false,
-"L9Q3FDS77": false,
-"W5N8KLA63": false,
-"Z1X7CVM48": false,
-"U8P4QRS39": false,
-"J3F9LKP52": false,
-"N6B2XZT80": false,
-"C7D5MPL44": false,
-"R2K8JYH73": false,
-"V9T1WXB65": false,
-"E4Z7NQC28": false,
-"A8M3RLP90": false,
-"T5Y2HGD61": false,
-"G7U4XNB36": false,
-"S2L9QWE83": false,
-"X6V1KJM47": false,
-"B3C8YTR59": false,
-"F9P2LSD74": false,
-"H1J6QAZ82": false,
-"K8W3XCV95": false
-};
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIAzgMCVMfEbxbMZjaCKQ-S8BknqdLggEP2KI-AyrO_wAO3pnd-P0Cv_2iuV19nv1c/exec"; // ⚠️ à remplacer
 
-function verifierCode(code) {
-  const message = document.getElementById("message");
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get("code");
 
-  if (!codes.hasOwnProperty(code)) {
-    message.textContent = "❌ Code invalide";
-    return;
-  }
+const messageElement = document.querySelector(".message");
 
-  if (codes[code]) {
-    message.textContent = "⚠️ Code déjà utilisé";
-    return;
-  }
-
-  // Marquer utilisé
-  codes[code] = true;
-
-  message.textContent = "🎉 Code valide !";
-
-  lancerConfettis();
+if (!code) {
+  messageElement.innerHTML = "⚠️ Aucun code fourni";
+} else {
+  verifierCode(code);
 }
 
-function lancerConfettis() {
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+async function verifierCode(code) {
+  try {
+    const response = await fetch(`${GOOGLE_SCRIPT_URL}?code=${code}`);
+    const data = await response.json();
+
+    if (data.status === "OK") {
+      // ✅ Code valide
+      messageElement.innerHTML = "✅ Code validé !";
+
+      lancerConfetti();
+
+    } else {
+      // ❌ Code invalide
+      messageElement.innerHTML = "❌ Code invalide";
+    }
+
+  } catch (error) {
+    console.error(error);
+    messageElement.innerHTML = "⚠️ Erreur serveur";
+  }
+}
+
+function lancerConfetti() {
+  const duration = 2000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
 }
